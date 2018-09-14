@@ -1,0 +1,244 @@
+<!DOCTYPE html5>
+<html lang="en">
+  <head>
+    <title>L.A. Vacancy</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="demo/styles/index.css" />
+    <link rel="stylesheet" type="text/css" href="demo/styles/prism.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/blowup.min.js"></script>
+    <script type="text/javascript" src="demo/scripts/index.js"></script>
+    <script type="text/javascript" src="demo/scripts/prism.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<!-- Image zoom:  -->
+<!--     https://github.com/paulkr/blowup.js -->
+<!-- d3 bar chart:  -->
+<!-- http://bl.ocks.org/erikvullings/51cc5332439939f1f292 -->
+
+ <style type="text/css">
+  svg {
+    font: 10px sans-serif;
+    shape-rendering: crispEdges;
+  }
+
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #FFF;
+  }
+ 
+  path.domain {
+    stroke: none;
+  }
+ 
+  .y .tick line {
+    stroke: #FFF;
+  }
+  </style>
+  </head>
+
+
+  <body>
+
+
+    <h1>The Space for Students</h1>
+    <h3>Vacant Residential Space near Los Angeles Community Colleges</h3>
+    <p> Historically, the city of Los Angeles has favored low-density development. As a result, 75% of L.A. residential space is zoned for single family homes. <br>
+    In a city experiencing one of the worst housing crisis' in U.S. history, Los Angeles has swaths of vacant space already zoned for residences. <br>
+    A 2016 study found that 1 in 5 Community College Students in L.A. are Homeless. The map shows the vacant residential space near 5 of Los Angeles' Community Colleges <br>
+    This map looks at the space near these colleges.</p>
+    <!-- <p style="color:#505050; font-size: 12px;">Hover over image</p> -->
+<!--     <br /> -->
+
+    <img src="image/cover3.png" class="demo-img pos-center">
+    <img src="image/ValleyCity3.png" class="supportImg">
+    <img src="image/PierceMissionTradeTech3.png" class="supportImg">
+
+    <br />
+
+    <p style = "font-size: 12px; font-color: #d3d3d3;"> Please note, 9 L.A. community colleges were studied. The 5 presented above were selected based on their relative central geographic location </p>
+    <h3> Sources </h3>
+    <p>Wisconsin Hope Lab Study "STILL HUNGRY AND HOMELESS" & Los Angeles Community College District Report<br>
+    https://www.laccd.edu/Documents/NewsDocuments/LACCD-HOPE-LAB-Survey-Results.pdf</p>
+    <p> http://www.wihopelab.com/publications/Wisconsin-HOPE-Lab-LA-CC-District-Report-Survey-Student-Needs.pdf </p>
+
+    <p>Los Angeles County Data Portal, Vacant Parcels & Parcel Geographic Data <br>
+    https://data.lacounty.gov/Parcel-/Vacant-Parcels-LA-County-from-ASR-Use-Code/vcaw-zeg9 </p>
+    <p>https://la.curbed.com/2018/9/10/17827982/single-family-houses-los-angeles-zoning-rules-explained</p>
+    <p></p>
+<!-- 
+
+
+<div id = "sources"> 
+<p>  https://www.laccd.edu/Documents/NewsDocuments/LACCD-HOPE-LAB-Survey-Results.pdf </p>
+</div>
+
+<div id = "chart" width: 50%;>
+<style>
+
+/*
+.chart rect {
+  fill: steelblue;
+}
+*/
+.chart .legend {
+  fill: white;
+  font: 14px sans-serif;
+  text-anchor: start;
+  font-size: 12px;
+}
+
+.chart text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: end;
+}
+
+.chart .label {
+  fill: white;
+  font: 14px sans-serif;
+  text-anchor: end;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+
+</style>
+<svg class="chart"></svg>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var data = {
+  labels: [
+    '% Food Insecure', '% Housing Insecure', '% Homeless',
+  ],
+  series: [
+    {
+      label: 'LACCD',
+      values: [63, 55, 19]
+    },
+    {
+      label: 'National',
+      values: [42, 46, 12]
+    },]
+};
+
+var chartWidth       = 300,
+    barHeight        = 20,
+    groupHeight      = barHeight * data.series.length,
+    gapBetweenGroups = 10,
+    spaceForLabels   = 150,
+    spaceForLegend   = 150;
+
+// Zip the series data together (first values, second values, etc.)
+var zippedData = [];
+for (var i=0; i<data.labels.length; i++) {
+  for (var j=0; j<data.series.length; j++) {
+    zippedData.push(data.series[j].values[i]);
+  }
+}
+
+// Color scale
+var color = d3.scale.category20();
+var chartHeight = barHeight * zippedData.length + gapBetweenGroups * data.labels.length;
+
+var x = d3.scale.linear()
+    .domain([0, d3.max(zippedData)])
+    .range([0, chartWidth]);
+
+var y = d3.scale.linear()
+    .range([chartHeight + gapBetweenGroups, 0]);
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .tickFormat('')
+    .tickSize(0)
+    .orient("left");
+
+// Specify the chart area and dimensions
+var chart = d3.select(".chart")
+    .attr("width", spaceForLabels + chartWidth + spaceForLegend)
+    .attr("height", chartHeight);
+
+// Create bars
+var bar = chart.selectAll("g")
+    .data(zippedData)
+    .enter().append("g")
+    .attr("transform", function(d, i) {
+      return "translate(" + spaceForLabels + "," + (i * barHeight + gapBetweenGroups * (0.5 + Math.floor(i/data.series.length))) + ")";
+    });
+
+// Create rectangles of the correct width
+bar.append("rect")
+    .attr("fill", function(d,i) { return color(i % data.series.length); })
+    .attr("class", "bar")
+    .attr("width", x)
+    .attr("height", barHeight - 1);
+
+// Add text label in bar
+bar.append("text")
+    .attr("x", function(d) { return x(d) - 3; })
+    .attr("y", barHeight / 2)
+    .attr("fill", "red")
+    .attr("dy", ".35em")
+    .text(function(d) { return d; });
+
+// Draw labels
+bar.append("text")
+    .attr("class", "label")
+    .attr("x", function(d) { return - 10; })
+    .attr("y", groupHeight / 2)
+    .attr("dy", ".35em")
+    .text(function(d,i) {
+      if (i % data.series.length === 0)
+        return data.labels[Math.floor(i/data.series.length)];
+      else
+        return ""});
+
+chart.append("g")
+      .attr("class", "y axis")
+      .attr("transform", "translate(" + spaceForLabels + ", " + -gapBetweenGroups/2 + ")")
+      .call(yAxis);
+
+// Draw legend
+var legendRectSize = 18,
+    legendSpacing  = 4;
+
+var legend = chart.selectAll('.legend')
+    .data(data.series)
+    .enter()
+    .append('g')
+    .attr('transform', function (d, i) {
+        var height = legendRectSize + legendSpacing;
+        var offset = -gapBetweenGroups/2;
+        var horz = spaceForLabels + chartWidth + 40 - legendRectSize;
+        var vert = i * height - offset;
+        return 'translate(' + horz + ',' + vert + ')';
+    });
+
+legend.append('rect')
+    .attr('width', legendRectSize)
+    .attr('height', legendRectSize)
+    .style('fill', function (d, i) { return color(i); })
+    .style('stroke', function (d, i) { return color(i); });
+
+legend.append('text')
+    .attr('class', 'legend')
+    .attr('x', legendRectSize + legendSpacing)
+    .attr('y', legendRectSize - legendSpacing)
+    .text(function (d) { return d.label; });
+
+</script> -->
+ </div>
+  
+  </body>
+</html>
